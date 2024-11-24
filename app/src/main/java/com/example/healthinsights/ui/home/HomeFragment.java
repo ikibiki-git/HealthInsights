@@ -9,12 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthinsights.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+    private ButtonAdapter buttonAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -26,6 +29,15 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        RecyclerView buttonList = binding.buttonList;
+        buttonList.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        homeViewModel.getButtonTexts().observe(getViewLifecycleOwner(), buttonTexts -> {
+            buttonAdapter = new ButtonAdapter(buttonTexts);
+            buttonList.setAdapter(buttonAdapter);
+        });
+
         return root;
     }
 
